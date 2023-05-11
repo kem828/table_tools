@@ -59,8 +59,8 @@ def append(opass):
             header_row = 0
     except:
         header_row = 0
-    print 'outputting to ' + outpath + outname
-    print 'Reading Primary Table'
+    print('outputting to ' + outpath + outname)
+    print('Reading Primary Table')
     try:
         if '.csv' in intab:
             prim = pd.read_csv(intab,memory_map=True,skiprows = header_row,keep_default_na=False,na_values=['#N/A'])
@@ -70,20 +70,20 @@ def append(opass):
             app.warningBox('badfile','The files must both be csv, xls or xlsx',parent=None)
         primdf = pd.DataFrame(data=prim)
 
-    except Exception,e:
+    except Exception as e:
         app.warningBox('exceptionfuncjoin',e,parent=None)
-    print app.getRadioButton('select')
+    print(app.getRadioButton('select'))
     if folder_status == False:
         if app.getRadioButton('select') == 'Highlighted Tables':
-            print ' Joining selected tables only!'
+            print(' Joining selected tables only!')
             merges = app.getListBox('selected')
         else:
-            print 'Joining all tables!'
+            print('Joining all tables!')
         merges = app.getAllListItems('selected')
     try:
         merged = primdf
         for tabs in merges:
-            print tabs
+            print(tabs)
             if '.csv' in tabs:
                 m1 = pd.read_csv(tabs,skiprows = header_row,keep_default_na=False,na_values=['#N/A'])
             elif '.xls' in intab or '.xlsx' in intab:
@@ -91,19 +91,19 @@ def append(opass):
             else:
                 app.warningBox('badfile','The files must  be csv, xls or xlsx',parent=None)
             m2 = pd.DataFrame(data = m1)
-            print 'joining table ' + tabs
+            print('joining table ' + tabs)
             if app.getCheckBox('Shared Columns only') == True:
                 merged = pd.concat([merged,m2],join = 'inner',ignore_index=True)
             else:
                 merged = pd.concat([merged,m2],ignore_index=True)
         joined = merged
-        print 'Converting back to Excel'
+        print('Converting back to Excel')
         writer = pd.ExcelWriter(outpath+'/'+outname+'.xlsx')
         joined.to_excel(writer)
-        print 'Writing File'
+        print('Writing File')
         writer.save()
         app.infoBox(':-)','Merge Complete',parent=None)
-    except Exception,e:
+    except Exception as e:
         app.warningBox('exceptionfuncjoin',e,parent=None)
 
 
@@ -158,7 +158,7 @@ def join(take):
         leftkey = leftkeydrop
     if len(rightkeydrop)>len(rightkey):
         rightkey = rightkeydrop
-    print leftkey
+    print(leftkey)
     #If the "Fuzzy Logic" checkbox is marked off, run through the fuzzy matching
     #function instead of the normal pandas merge function
     if app.getCheckBox('Fuzzy Logic Matching (experimental)'):
@@ -168,7 +168,7 @@ def join(take):
             joined.to_excel(writer)
             writer.save()
             app.infoBox(':-)','Join Complete',parent=None)
-        except Exception,e:
+        except Exception as e:
             app.warningBox('exceptionfuncjoin',e,parent=None)
     else:
         try:
@@ -187,16 +187,16 @@ def join(take):
             else:
                 app.warningBox('badfile','The files must both be csv, xls or xlsx',parent=None)
             app.infoBox(':-)','Join Complete',parent=None)
-        except Exception,e:
+        except Exception as e:
             app.warningBox('exceptionfuncjoin',e,parent=None)
 
 #simple function to get and return all uniques in a chosen field in a dataframe
 def get_uniques(frame,field):
     try:
         vals = frame[field].unique()
-        print vals
+        print(vals)
         return sorted(vals)
-    except Exception,e:
+    except Exception as e:
         app.warningBox('exceptionfuncjoin','Error during Unique value Collection\n'+str(e),parent=None)
         
 #this is the split function. It collects all unique values in the chosen field
@@ -223,7 +223,7 @@ def split(opass):
 #Update left table field titles 
 def pickjoinin(opass):
     app.openSubWindow('Join Tool')
-    print opass
+    print(opass)
     jin = app.getEntry('intab')
     if '.csv' in jin:
         intable = pd.read_csv(jin)
@@ -242,7 +242,7 @@ def pickjoinin(opass):
 #update right table field titles
 def pickjoinon(opass2):
     app.openSubWindow('Join Tool')
-    print opass2
+    print(opass2)
     jin2 = app.getEntry('jointab')
     if '.csv' in jin2:
         intable = pd.read_csv(jin2)
